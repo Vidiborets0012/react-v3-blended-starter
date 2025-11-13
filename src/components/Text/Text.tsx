@@ -1,4 +1,5 @@
 import style from "./Text.module.css";
+import type React from "react";
 
 interface TextProps {
   children: React.ReactNode;

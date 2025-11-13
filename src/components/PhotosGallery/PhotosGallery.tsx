@@ -5,7 +5,7 @@ import PhotosGalleryItem from "../PhotosGalleryItem/PhotosGalleryItem";
 
 interface PhotosGalleryProps {
   photos: Photo[];
-  onSelect: () => void;
+  onSelect: (photo: Photo | null) => void;
 }
 export default function PhotosGallery({
   photos,
@@ -15,7 +15,7 @@ export default function PhotosGallery({
     <Grid>
       {photos.map((photo) => (
         <GridItem key={photo.id}>
-          <PhotosGalleryItem photo={photo} />
+          <PhotosGalleryItem photo={photo} onSelect={onSelect} />
         </GridItem>
       ))}
     </Grid>

@@ -8,11 +8,17 @@ import { getPhotos } from "../../services/photos";
 import PhotosGallery from "../PhotosGallery/PhotosGallery";
 import Loader from "../Loader/Loader";
 import Text from "../Text/Text";
+import Modal from "../Modal/Modal";
 
 export default function App() {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+
+  const handleSelectPhoto = (photo: Photo | null) => {
+    setSelectedPhoto(photo);
+  };
 
   const handleSearch = async (searchQuery: string) => {
     try {
@@ -36,7 +42,23 @@ export default function App() {
           {isLoading && <Loader />}
           <Form onSubmit={handleSearch} />
           {photos.length > 0 && (
-            <PhotosGallery photos={photos} onSelect={() => {}} />
+            <PhotosGallery photos={photos} onSelect={handleSelectPhoto} />
+          )}
+          {selectedPhoto && (
+            <Modal
+              onClose={() => {
+                handleSelectPhoto(null);
+              }}
+            >
+              <div
+                style={{
+                  backgroundColor: selectedPhoto.avg_color,
+                  borderColor: selectedPhoto.avg_color,
+                }}
+              >
+                <img src={selectedPhoto.src.large} alt={selectedPhoto.alt} />
+              </div>
+            </Modal>
           )}
         </Container>
       </Section>
