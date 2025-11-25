@@ -8,6 +8,7 @@ import { fetchPosts } from "../../services/postService";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useDebounce } from "use-debounce";
+import { Toaster } from "react-hot-toast";
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -38,6 +39,7 @@ export default function App() {
       {data && data.length > 0 && (
         <PostList posts={data} toggleModal={() => {}} toggleEditPost={() => {}} />
       )}
+      <Toaster position="top-right" />
     </div>
   );
 }
