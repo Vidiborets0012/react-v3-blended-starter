@@ -25,7 +25,9 @@ export default function App() {
       </header>
       {/* <Modal>Передати через children компонент CreatePostForm або EditPostForm</Modal> */}
       {/* <PostList posts={data} /> */}
-      {data && data.length > 0 && <PostList posts={data} />}
+      {data && data.length > 0 && (
+        <PostList posts={data} toggleModal={() => {}} toggleEditPost={() => {}} />
+      )}
     </div>
   );
 }

@@ -10,12 +10,20 @@ interface PostListProps {
 export default function PostList({ posts, toggleModal, toggleEditPost }: PostListProps) {
   return (
     <ul className={css.list}>
-      {posts.map(({ id, title, body }) => (
-        <li key={id} className={css.listItem}>
-          <h2 className={css.title}>{title}</h2>
-          <p className={css.content}>{body}</p>
+      {posts.map((post) => (
+        <li key={post.id} className={css.listItem}>
+          <h2 className={css.title}>{post.title}</h2>
+          <p className={css.content}>{post.body}</p>
           <div className={css.footer}>
-            <button className={css.edit}>Edit</button>
+            <button
+              className={css.edit}
+              onClick={() => {
+                toggleModal();
+                toggleEditPost(post);
+              }}
+            >
+              Edit
+            </button>
             <button className={css.delete}>Delete</button>
           </div>
         </li>
