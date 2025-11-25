@@ -2,10 +2,15 @@ import axios from "axios";
 
 axios.defaults.baseURL = "https://jsonplaceholder.typicode.com";
 
-export const fetchPosts = async (searchText, page) => {};
+export const fetchPosts = async (searchText, page) => {
+  const response = await axios.get("/posts");
+  // console.log("response:", response);
 
-export const createPost = async (newPost) => {};
+  return response.data;
+};
 
-export const editPost = async (newDataPost) => {};
+// export const createPost = async (newPost) => {};
 
-export const deletePost = async (postId) => {};
+// export const editPost = async (newDataPost) => {};
+
+// export const deletePost = async (postId) => {};

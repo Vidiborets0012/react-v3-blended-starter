@@ -1,17 +1,25 @@
+import { Post } from "../../types/post";
 import css from "./PostList.module.css";
 
-export default function PostList() {
+interface PostListProps {
+  posts: Post[];
+  toggleModal: () => void;
+  toggleEditPost: (post: Post) => void;
+}
+
+export default function PostList({ posts, toggleModal, toggleEditPost }: PostListProps) {
   return (
     <ul className={css.list}>
-      {/* список постів, кожен з яких створює наступну розмітку */}
-      <li className={css.listItem}>
-        <h2 className={css.title}>Title</h2>
-        <p className={css.content}>Контент</p>
-        <div className={css.footer}>
-          <button className={css.edit}>Edit</button>
-          <button className={css.delete}>Delete</button>
-        </div>
-      </li>
+      {posts.map(({ id, title, body }) => (
+        <li key={id} className={css.listItem}>
+          <h2 className={css.title}>{title}</h2>
+          <p className={css.content}>{body}</p>
+          <div className={css.footer}>
+            <button className={css.edit}>Edit</button>
+            <button className={css.delete}>Delete</button>
+          </div>
+        </li>
+      ))}
     </ul>
   );
 }
