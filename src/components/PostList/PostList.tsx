@@ -3,12 +3,12 @@ import css from "./PostList.module.css";
 
 interface PostListProps {
   posts: Post[];
-  toggleModal: () => void;
+  // toggleModal: () => void;
   toggleEditPost: (post: Post) => void;
   onDelete: (id: number) => void;
 }
 
-export default function PostList({ posts, toggleModal, toggleEditPost, onDelete }: PostListProps) {
+export default function PostList({ posts, toggleEditPost, onDelete }: PostListProps) {
   if (posts.length === 0) {
     return <p>No post found</p>;
   }
@@ -23,7 +23,7 @@ export default function PostList({ posts, toggleModal, toggleEditPost, onDelete 
               className={css.edit}
               onClick={() => {
                 toggleEditPost(post);
-                toggleModal();
+                // toggleModal();
               }}
             >
               Edit

@@ -110,7 +110,7 @@ export default function App() {
       {paginatedPosts.length > 0 && (
         <PostList
           posts={paginatedPosts}
-          toggleModal={openCreateModal}
+          // toggleModal={openCreateModal}
           toggleEditPost={openEditModal}
           onDelete={handleDelete}
         />
