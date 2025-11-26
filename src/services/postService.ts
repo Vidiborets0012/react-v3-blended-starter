@@ -25,7 +25,18 @@ export const createPost = async (newPost: NewPostContent) => {
   return response.data;
 };
 
-// export const editPost = async (newDataPost) => {};
+interface EditPostData {
+  id: number;
+  title?: string;
+  body?: string;
+}
+
+export const editPost = async (newDataPost: EditPostData): Promise<Post> => {
+  const { id, ...data } = newDataPost;
+  const response = await axios.patch<Post>(`/posts/${id}`, data);
+
+  return response.data;
+};
 
 export const deletePost = async (postId: number) => {
   const response = await axios.delete(`/posts/${postId}`);
