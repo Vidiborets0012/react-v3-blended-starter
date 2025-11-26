@@ -7,15 +7,16 @@ type fetchPostsResponse = Post[];
 
 type NewPostContent = Pick<Post, "title" | "body">;
 
-export const fetchPosts = async (searchText: string, page: number): Promise<Post[]> => {
+export const fetchPosts = async (searchText: string): Promise<Post[]> => {
   const response = await axios.get<fetchPostsResponse>("/posts", {
     params: {
       ...(searchText !== "" && { q: searchText }),
     },
   });
-  // console.log("response:", response);
-
+  console.log("response:", response);
+  console.log("headers:", response.headers);
   return response.data;
+
   // return { posts: response.data };
 };
 

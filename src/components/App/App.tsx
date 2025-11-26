@@ -1,16 +1,33 @@
 // import Modal from "../Modal/Modal";
 import PostList from "../PostList/PostList";
 import SearchBox from "../SearchBox/SearchBox";
-// import Pagination from "../Pagination/Pagination";
+import Pagination from "../Pagination/Pagination";
 
 import css from "./App.module.css";
 import { deletePost, fetchPosts } from "../../services/postService";
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import toast, { Toaster } from "react-hot-toast";
 
 export default function App() {
+  const LIMIT = 10;
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
+
+  const { data } = useQuery({
+    queryKey: ["posts", debouncedSearchQuery],
+    queryFn: () => fetchPosts(debouncedSearchQuery),
+    placeholderData: keepPreviousData,
+  });
+  console.log("data:", data);
+
+  const totalPages = data ? Math.ceil(data.length / LIMIT) : 0;
+
+  const paginatedPosts = data?.slice((currentPage - 1) * LIMIT, currentPage * LIMIT) ?? [];
+
   const queryClient = useQueryClient();
 
   const deleteMutation = useMutation({
@@ -30,34 +47,37 @@ export default function App() {
     deleteMutation.mutate(id);
   };
 
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
-
-  const { data } = useQuery({
-    queryKey: ["posts", debouncedSearchQuery],
-    queryFn: () => fetchPosts(debouncedSearchQuery),
-    placeholderData: keepPreviousData,
-  });
-
-  console.log("data:", data);
-
   const changeSearchQuery = (newQuery: string) => {
-    setSearchQuery(newQuery);
+    setSearchQuery(newQuery.trim());
+    setCurrentPage(1);
   };
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages || 1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalPages]);
 
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
         <SearchBox value={searchQuery} onSearch={changeSearchQuery} />
-        {/* <Pagination /> */}
-        {/* <button className={css.button}>Create post</button> */}
+        {totalPages > 1 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
+        )}
+
+        <button className={css.button}>Create post</button>
       </header>
       {/* <Modal>Передати через children компонент CreatePostForm або EditPostForm</Modal> */}
-      {/* <PostList posts={data} /> */}
-      {data && data.length > 0 && (
+
+      {paginatedPosts.length > 0 && (
         <PostList
-          posts={data}
+          posts={paginatedPosts}
           toggleModal={() => {}}
           toggleEditPost={() => {}}
           onDelete={handleDelete}

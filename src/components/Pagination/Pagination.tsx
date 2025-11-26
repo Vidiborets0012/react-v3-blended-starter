@@ -2,7 +2,14 @@ import ReactPaginate from "react-paginate";
 
 import css from "./Pagination.module.css";
 
-export default function Pagination({ totalPages, currentPage, onPageChange }) {
+interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
+
+export default function Pagination({ totalPages, currentPage, onPageChange }: PaginationProps) {
+  if (totalPages <= 1) return null;
   return (
     <ReactPaginate
       pageCount={totalPages}
@@ -12,6 +19,7 @@ export default function Pagination({ totalPages, currentPage, onPageChange }) {
       forcePage={currentPage - 1}
       containerClassName={css.pagination}
       activeClassName={css.active}
+      breakLabel="..."
       nextLabel="→"
       previousLabel="←"
     />

@@ -12,7 +12,7 @@ export default function SearchBox({ value, onSearch }: SearchBoxProps) {
       type="text"
       placeholder="Search posts"
       value={value}
-      onChange={(event) => onSearch(event.target.value.trim())}
+      onChange={(event) => onSearch(event.target.value)}
     />
   );
 }
