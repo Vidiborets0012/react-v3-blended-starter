@@ -26,4 +26,11 @@ export const createPost = async (newPost: NewPostContent) => {
 
 // export const editPost = async (newDataPost) => {};
 
-// export const deletePost = async (postId) => {};
+export const deletePost = async (postId: number) => {
+  const response = await axios.delete(`/posts/${postId}`);
+  return response.data;
+};
+
+// deletePost(1)
+//   .then((data) => console.log("Deleted:", data)) //Deleted: {}
+//   .catch((err) => console.log("Error:", err));

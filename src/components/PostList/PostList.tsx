@@ -5,9 +5,13 @@ interface PostListProps {
   posts: Post[];
   toggleModal: () => void;
   toggleEditPost: (post: Post) => void;
+  onDelete: (id: number) => void;
 }
 
-export default function PostList({ posts, toggleModal, toggleEditPost }: PostListProps) {
+export default function PostList({ posts, toggleModal, toggleEditPost, onDelete }: PostListProps) {
+  if (posts.length === 0) {
+    return <p>No post found</p>;
+  }
   return (
     <ul className={css.list}>
       {posts.map((post) => (
@@ -18,13 +22,15 @@ export default function PostList({ posts, toggleModal, toggleEditPost }: PostLis
             <button
               className={css.edit}
               onClick={() => {
-                toggleModal();
                 toggleEditPost(post);
+                toggleModal();
               }}
             >
               Edit
             </button>
-            <button className={css.delete}>Delete</button>
+            <button className={css.delete} onClick={() => onDelete(post.id)}>
+              Delete
+            </button>
           </div>
         </li>
       ))}

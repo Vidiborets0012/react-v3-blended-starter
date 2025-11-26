@@ -4,13 +4,32 @@ import SearchBox from "../SearchBox/SearchBox";
 // import Pagination from "../Pagination/Pagination";
 
 import css from "./App.module.css";
-import { fetchPosts } from "../../services/postService";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { deletePost, fetchPosts } from "../../services/postService";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useDebounce } from "use-debounce";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function App() {
+  const queryClient = useQueryClient();
+
+  const deleteMutation = useMutation({
+    mutationFn: deletePost,
+    onSuccess: () => {
+      toast.success("Post deleted successfully!");
+      queryClient.invalidateQueries({
+        queryKey: ["posts"],
+      });
+    },
+    onError: () => {
+      toast.error("Failed to delete post");
+    },
+  });
+
+  const handleDelete = (id: number) => {
+    deleteMutation.mutate(id);
+  };
+
   const [searchQuery, setSearchQuery] = useState("");
 
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
@@ -37,7 +56,12 @@ export default function App() {
       {/* <Modal>Передати через children компонент CreatePostForm або EditPostForm</Modal> */}
       {/* <PostList posts={data} /> */}
       {data && data.length > 0 && (
-        <PostList posts={data} toggleModal={() => {}} toggleEditPost={() => {}} />
+        <PostList
+          posts={data}
+          toggleModal={() => {}}
+          toggleEditPost={() => {}}
+          onDelete={handleDelete}
+        />
       )}
       <Toaster position="top-right" />
     </div>
