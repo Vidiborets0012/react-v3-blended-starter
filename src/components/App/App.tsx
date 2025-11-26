@@ -1,4 +1,4 @@
-// import Modal from "../Modal/Modal";
+import Modal from "../Modal/Modal";
 import PostList from "../PostList/PostList";
 import SearchBox from "../SearchBox/SearchBox";
 import Pagination from "../Pagination/Pagination";
@@ -9,6 +9,7 @@ import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tansta
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import toast, { Toaster } from "react-hot-toast";
+import PostForm from "../CreatePostForm/CreatePostForm";
 
 export default function App() {
   const LIMIT = 10;
@@ -16,6 +17,7 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data } = useQuery({
     queryKey: ["posts", debouncedSearchQuery],
@@ -59,6 +61,16 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalPages]);
 
+  // --- Відкрити модалку для створення ---
+  const openCreateModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // --- Закрити модалку ---
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
@@ -71,9 +83,15 @@ export default function App() {
           />
         )}
 
-        <button className={css.button}>Create post</button>
+        <button className={css.button} onClick={openCreateModal}>
+          Create post
+        </button>
       </header>
-      {/* <Modal>Передати через children компонент CreatePostForm або EditPostForm</Modal> */}
+      {isModalOpen && (
+        <Modal onClose={closeModal}>
+          <PostForm onClose={closeModal} />
+        </Modal>
+      )}
 
       {paginatedPosts.length > 0 && (
         <PostList
