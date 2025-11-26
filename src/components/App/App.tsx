@@ -10,6 +10,8 @@ import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import toast, { Toaster } from "react-hot-toast";
 import PostForm from "../CreatePostForm/CreatePostForm";
+import { Post } from "../../types/post";
+import EditPostForm from "../EditPostForm/EditPostForm";
 
 export default function App() {
   const LIMIT = 10;
@@ -18,6 +20,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editedPost, setEditedPost] = useState<null | Post>(null);
 
   const { data } = useQuery({
     queryKey: ["posts", debouncedSearchQuery],
@@ -63,12 +66,19 @@ export default function App() {
 
   // --- Відкрити модалку для створення ---
   const openCreateModal = () => {
+    setEditedPost(null);
     setIsModalOpen(true);
+  };
+
+  const openEditModal = (post: Post) => {
+    setEditedPost(post); // вставляємо пост у стан
+    setIsModalOpen(true); // відкриваємо модалку
   };
 
   // --- Закрити модалку ---
   const closeModal = () => {
     setIsModalOpen(false);
+    setEditedPost(null); // очищуємо форму після закриття
   };
 
   return (
@@ -89,15 +99,19 @@ export default function App() {
       </header>
       {isModalOpen && (
         <Modal onClose={closeModal}>
-          <PostForm onClose={closeModal} />
+          {editedPost ? (
+            <EditPostForm post={editedPost} onClose={closeModal} />
+          ) : (
+            <PostForm onClose={closeModal} />
+          )}
         </Modal>
       )}
 
       {paginatedPosts.length > 0 && (
         <PostList
           posts={paginatedPosts}
-          toggleModal={() => {}}
-          toggleEditPost={() => {}}
+          toggleModal={openCreateModal}
+          toggleEditPost={openEditModal}
           onDelete={handleDelete}
         />
       )}
