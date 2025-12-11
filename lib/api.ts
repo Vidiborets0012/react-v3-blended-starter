@@ -53,8 +53,27 @@ export const deletePost = async (postId: number) => {
   return response.data;
 };
 
-export const fetchPostById = async () => {};
+export const fetchPostById = async (postId: number) => {
+  // const response = await axios.get(`/posts/${postId}`);
+  // return response.data;
+  const { data } = await axios.get<Post>(`/posts/${postId}`);
+  return data;
+};
+// fetch('https://jsonplaceholder.typicode.com/posts/1')
+//   .then((response) => response.json())
+//   .then((json) => console.log(json));
 
-export const fetchUsers = async () => {};
+export const fetchUsers = async () => {
+  // const response = await axios.get<User>('/users');
+  // return response.data;
+  const { data } = await axios.get<User>('/users');
+  return data;
+};
+// https://jsonplaceholder.typicode.com/users
 
-export const fetchUserById = async () => {};
+export const fetchUserById = async (userId: User['id']) => {
+  // const response = await axios.get<User>(`/users${userId}`);
+  // return response.data;
+  const { data } = await axios.get<User>(`/users${userId}`);
+  return data;
+};
